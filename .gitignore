@@ -1,0 +1,122 @@
+# ==========================================
+# Byte-compiled / optimized / DLL files
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ==========================================
+# Virtual Environments & Packages
+# ==========================================
+.venv/
+venv/
+env/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ==========================================
+# IDEs & Code Editors
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# ==========================================
+# PyTorch / ML Model Checkpoints & Datasets
+# ==========================================
+# Model Checkpoints & Weights
+*.pt
+*.pth
+*.bin
+*.onnx
+*.engine
+*.safetensors
+*.ckpt
+
+# Datasets & Local Data
+data/
+datasets/
+raw_data/
+processed_data/
+*.csv
+*.h5
+*.hdf5
+*.npz
+*.npy
+*.parquet
+
+# Training Outputs & Logs
+runs/
+logs/
+tensorboard/
+wandb/
+.wandb/
+catboost_info/
+outputs/
+checkpoints/
+
+# Albumentations / CV Cache & Augmentation Artifacts
+.albumentations/
+
+# OpenCV / Display Cache
+.Xauthority
+
+# ==========================================
+# Jupyter Notebooks & Visualizations
+# ==========================================
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+*.gviz
+
+# ==========================================
+# Environment & Configuration Security
+# ==========================================
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secrets.yaml
+secrets.json
+
+# ==========================================
+# Testing & Coverage Metrics
+# ==========================================
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.nox/
+.tox/
+
+# ==========================================
+# OS Generated Files
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

@@ -1,0 +1,50 @@
+seed: 42
+
+device: auto
+
+experiment_name: resnet50_regression
+
+output_dir: artifacts
+
+# num_workers: 4
+num_workers: 0
+
+pin_memory: false
+
+mixed_precision: true
+
+model:
+
+  name: resnet50
+
+  pretrained: true
+
+  dropout: 0.3
+
+training:
+
+  train_ratio: 0.8
+
+  val_ratio: 0.1
+
+  test_ratio: 0.1
+
+  epochs: 100
+
+  batch_size: 32
+
+  learning_rate: 0.0003
+
+  weight_decay: 0.0001
+
+loss:
+
+  name: mse
+
+optimizer:
+
+  name: adamw
+
+scheduler:
+
+  name: cosine
