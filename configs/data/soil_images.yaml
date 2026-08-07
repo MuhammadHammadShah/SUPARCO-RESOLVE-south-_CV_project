@@ -1,0 +1,20 @@
+dataset:
+
+  image_dir: data/images
+
+  csv_file: data/minerals.csv
+
+  image_size: 224
+
+  image_extension: ".jpg"
+
+  sample_id_column: "Sample ID"
+
+targets:
+
+  - Cd
+  - Cu
+  - Ni
+  - Mn
+  - Fe
+  - Zn

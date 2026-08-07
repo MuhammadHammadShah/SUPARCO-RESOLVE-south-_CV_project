@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import numpy as np
 from PIL import Image
 
@@ -9,6 +7,7 @@ import torch
 
 from soilreg.models.registry import build_model
 from soilreg.data.transforms import get_valid_transforms
+from soilreg.preprocessing import TargetScaler
 
 
 class SoilMineralPredictor:
@@ -23,9 +22,15 @@ class SoilMineralPredictor:
         pretrained: bool = False,
         dropout: float = 0.0,
         device: str = "auto",
+        scaler_path: str = "artifacts/scaler.pkl",
     ):
 
+        # ---------------------------------------------------------
+        # Device
+        # ---------------------------------------------------------
+
         if device == "auto":
+
             device = (
                 "cuda"
                 if torch.cuda.is_available()
@@ -36,9 +41,17 @@ class SoilMineralPredictor:
 
         self.targets = targets
 
+        # ---------------------------------------------------------
+        # Image transforms
+        # ---------------------------------------------------------
+
         self.transforms = get_valid_transforms(
             image_size
         )
+
+        # ---------------------------------------------------------
+        # Build model
+        # ---------------------------------------------------------
 
         self.model = build_model(
             model_name=model_name,
@@ -60,11 +73,25 @@ class SoilMineralPredictor:
 
         self.model.eval()
 
+        # ---------------------------------------------------------
+        # Load target scaler
+        # ---------------------------------------------------------
+
+        self.target_scaler = TargetScaler()
+
+        self.target_scaler.load(
+            scaler_path
+        )
+
     @torch.no_grad()
     def predict(
         self,
         image_path: str,
     ) -> dict[str, float]:
+
+        # ---------------------------------------------------------
+        # Read image
+        # ---------------------------------------------------------
 
         image = Image.open(
             image_path
@@ -80,11 +107,27 @@ class SoilMineralPredictor:
 
         image = image.to(self.device)
 
+        # ---------------------------------------------------------
+        # Forward pass
+        # ---------------------------------------------------------
+
         outputs = self.model(image)
 
         outputs = outputs.squeeze(0)
 
         outputs = outputs.cpu().numpy()
+
+        # ---------------------------------------------------------
+        # Convert back to original mineral values
+        # ---------------------------------------------------------
+
+        outputs = self.target_scaler.inverse_transform(
+            outputs.reshape(1, -1)
+        )[0]
+
+        # ---------------------------------------------------------
+        # Return dictionary
+        # ---------------------------------------------------------
 
         return {
 

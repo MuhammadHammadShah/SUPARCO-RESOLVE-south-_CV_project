@@ -55,11 +55,11 @@ share/python-wheels/
 *.ckpt
 
 # Datasets & Local Data
-data/
-datasets/
-raw_data/
-processed_data/
-*.csv
+# data/
+# datasets/
+# raw_data/
+# processed_data/
+# *.csv
 *.h5
 *.hdf5
 *.npz
