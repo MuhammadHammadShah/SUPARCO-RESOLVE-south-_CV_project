@@ -2,20 +2,23 @@ seed: 42
 
 device: auto
 
-experiment_name: resnet50_regression
+experiment_name: densenet121_regression
 
 output_dir: artifacts
 
 # num_workers: 4
 num_workers: 0
 
-pin_memory: false
+# pin_memory: false
+pin_memory: true
 
 mixed_precision: true
 
 model:
 
-  name: resnet50
+  # name: resnet50
+
+  name: densenet121
 
   pretrained: true
 
