@@ -10,7 +10,43 @@ import torch
 from torch.utils.data import Dataset
 
 
+import re
+
+
+def get_group_id(sample_id: str) -> str:
+    """
+    Convert an augmented image Sample ID into its original
+    soil-sample group.
+
+    Examples:
+        1Ah_m_x_a   -> 1Ah
+        1Ah_m_x1_a  -> 1Ah
+        1Ah_m_x2_c  -> 1Ah
+        10Bv_x2_c   -> 10Bv
+        13v_x1_b    -> 13v
+    """
+
+    sample_id = str(sample_id).strip()
+
+    match = re.match(r"^(\d+[A-Za-z]+)", sample_id)
+
+    if not match:
+        raise ValueError(
+            f"Could not determine group ID from Sample ID: {sample_id}"
+        )
+
+    return match.group(1)
+
+
 class SoilRegressionDataset(Dataset):
+    """
+    Dataset for multi-output soil mineral regression.
+
+    Each image is paired with six target values:
+        Cd, Cu, Ni, Mn, Fe, Zn
+
+    Target normalization should be performed BEFORE creating this dataset.
+    """
 
     def __init__(
         self,
@@ -20,7 +56,7 @@ class SoilRegressionDataset(Dataset):
         sample_column: str,
         image_extension: str = ".jpg",
         transforms=None,
-    ):
+    ) -> None:
 
         self.df = dataframe.reset_index(drop=True)
 
@@ -34,31 +70,56 @@ class SoilRegressionDataset(Dataset):
 
         self.transforms = transforms
 
-    def __len__(self):
-
+    def __len__(self) -> int:
         return len(self.df)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int):
 
         row = self.df.iloc[index]
 
+        # --------------------------------------------------
+        # Image path
+        # --------------------------------------------------
+
         sample_id = str(row[self.sample_column])
 
-        image_path = self.image_dir / f"{sample_id}{self.image_extension}"
+        image_path = (
+            self.image_dir
+            / f"{sample_id}{self.image_extension}"
+        )
 
         if not image_path.exists():
-            raise FileNotFoundError(image_path)
+            raise FileNotFoundError(
+                f"Image not found: {image_path}"
+            )
+
+        # --------------------------------------------------
+        # Load image
+        # --------------------------------------------------
 
         image = Image.open(image_path).convert("RGB")
 
-        image = np.array(image)
+        image = np.asarray(image)
+
+        # --------------------------------------------------
+        # Image transforms
+        # --------------------------------------------------
 
         if self.transforms is not None:
+            image = self.transforms(
+                image=image
+            )["image"]
 
-            image = self.transforms(image=image)["image"]
+        # --------------------------------------------------
+        # Targets
+        # --------------------------------------------------
+
+        target_values = row[self.targets].to_numpy(
+            dtype=np.float32
+        )
 
         target = torch.tensor(
-            row[self.targets].values.astype(np.float32),
+            target_values,
             dtype=torch.float32,
         )
 
