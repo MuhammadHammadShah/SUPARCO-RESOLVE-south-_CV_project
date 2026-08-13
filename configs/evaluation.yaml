@@ -1,0 +1,89 @@
+evaluation:
+
+  # --------------------------------------------------
+  # Model
+  # For changing the model, just change the `Name` and `checkpoint.point`
+  # --------------------------------------------------
+
+  model:
+    name: densenet121
+    num_outputs: 6
+    pretrained: false
+    dropout: 0.3
+
+    checkpoint:
+      path: artifacts/checkpoints/best.pt
+
+
+  # --------------------------------------------------
+  # Dataset
+  # --------------------------------------------------
+
+  data:
+
+    image_dir: data/images
+    csv_file: data/minerals.csv
+
+    sample_id_column: "Sample ID"
+    image_extension: ".jpg"
+
+    targets:
+      - Cd
+      - Cu
+      - Ni
+      - Mn
+      - Fe
+      - Zn
+
+
+  # --------------------------------------------------
+  # Image / DataLoader
+  # --------------------------------------------------
+
+  loader:
+
+    image_size: 224
+    batch_size: 16
+    num_workers: 0
+    pin_memory: true
+
+
+  # --------------------------------------------------
+  # Reproducibility
+  # --------------------------------------------------
+
+  split:
+
+    seed: 42
+
+    train_ratio: 0.80
+    val_ratio: 0.10
+    test_ratio: 0.10
+
+
+  # --------------------------------------------------
+  # Target scaling
+  # --------------------------------------------------
+
+  scaler:
+
+    path: artifacts/scaler.pkl
+
+
+  # --------------------------------------------------
+  # Device
+  # --------------------------------------------------
+
+  device: auto
+
+
+  # --------------------------------------------------
+  # Output
+  # --------------------------------------------------
+
+  output:
+
+    directory: results/densenet121
+
+    predictions_file: predictions.csv
+    metrics_file: metrics.json

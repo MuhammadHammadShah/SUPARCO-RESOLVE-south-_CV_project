@@ -10,20 +10,16 @@ from sklearn.preprocessing import StandardScaler
 class TargetScaler:
 
     def __init__(self):
-
         self.scaler = StandardScaler()
-
 
     def fit(
         self,
         dataframe: pd.DataFrame,
         targets: list[str],
     ):
-
         self.scaler.fit(
             dataframe[targets]
         )
-
 
     def transform(
         self,
@@ -39,14 +35,11 @@ class TargetScaler:
 
         return dataframe
 
-
     def inverse_transform(
         self,
         values,
     ):
-
         return self.scaler.inverse_transform(values)
-
 
     def save(
         self,
@@ -65,10 +58,14 @@ class TargetScaler:
             path,
         )
 
-
+    @classmethod
     def load(
-        self,
+        cls,
         path: str | Path,
     ):
 
-        self.scaler = joblib.load(path)
+        scaler = cls()
+
+        scaler.scaler = joblib.load(path)
+
+        return scaler
