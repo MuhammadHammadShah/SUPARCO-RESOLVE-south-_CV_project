@@ -13,6 +13,10 @@ from sklearn.metrics import (
     mean_squared_error,
     r2_score,
 )
+
+from soilreg.evaluation.plotting import (
+    generate_plots,
+)
 from sklearn.model_selection import train_test_split
 
 # from soilreg.config.loader import load_config
@@ -425,7 +429,8 @@ def main(config_path: str):
     split_cfg = evaluation["split"]
     scaler_cfg = evaluation["scaler"]
     output_cfg = evaluation["output"]
-
+    plot_cfg = evaluation["plots"]
+    
     # --------------------------------------------------------
     # Device
     # --------------------------------------------------------
@@ -633,6 +638,41 @@ def main(config_path: str):
         metrics,
         targets,
     )
+    
+    # --------------------------------------------------------
+    # Plots
+    # --------------------------------------------------------
+
+    if plot_cfg["enabled"]:
+
+        plots_dir = (
+            output_dir
+            / plot_cfg["directory"]
+        )
+
+        print("\nGenerating plots...")
+
+        generate_plots(
+            y_true=y_true,
+            y_pred=y_pred,
+            metrics=metrics,
+            targets=targets,
+            output_dir=plots_dir,
+            actual_vs_predicted=(
+                plot_cfg["actual_vs_predicted"]
+            ),
+            residuals=(
+                plot_cfg["residuals"]
+            ),
+            metrics_enabled=(
+                plot_cfg["metrics"]
+            ),
+        )
+
+        print(
+            f"Plots saved to: {plots_dir}"
+        )
+    
 
     # --------------------------------------------------------
     # Save predictions

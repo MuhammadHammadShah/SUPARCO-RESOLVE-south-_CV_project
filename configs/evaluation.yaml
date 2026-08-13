@@ -12,7 +12,7 @@ evaluation:
     dropout: 0.3
 
     checkpoint:
-      path: artifacts/checkpoints/best.pt
+      path: artifacts/checkpoints/best_densenet121_w.pt
 
 
   # --------------------------------------------------
@@ -75,6 +75,19 @@ evaluation:
   # --------------------------------------------------
 
   device: auto
+
+
+# --------------------------------------------------
+# Plots
+# --------------------------------------------------
+
+  plots:
+    enabled: true
+    directory: plots
+
+    actual_vs_predicted: true
+    residuals: true
+    metrics: true
 
 
   # --------------------------------------------------
